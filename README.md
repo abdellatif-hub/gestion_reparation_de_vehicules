@@ -204,7 +204,7 @@ Modifier réparation existante
 - Vehicule → Reparation
 
 # Conclusion
-````
+
 Ce TP nous a permis de créer une application web complète avec Spring Boot en utilisant une base de données MySQL. Nous avons réalisé les opérations CRUD pour gérer les clients, les véhicules et les réparations, tout en appliquant l’architecture MVC.
 
-````
+
