@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicules</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <p class="eyebrow">Garage</p>
+        <h1>Gestion des vehicules</h1>
+    </div>
+    <nav>
+        <a th:href="@{/clients}">Clients</a>
+        <a th:href="@{/vehicules}" class="active">Vehicules</a>
+        <a th:href="@{/reparations}">Reparations</a>
+    </nav>
+</header>
+
+<main class="page">
+    <section class="panel">
+        <h2 th:text="${editMode} ? 'Modifier le vehicule' : 'Ajouter un vehicule'">Ajouter un vehicule</h2>
+        <p class="hint" th:if="${#lists.isEmpty(clients)}">
+            Ajoute d'abord un client dans la page Clients.
+        </p>
+        <form th:action="${editMode} ? @{/vehicules/update/{id}(id=${vehiculeForm.id})} : @{/vehicules}"
+              method="post" class="form-grid">
+            <label>
+                Marque
+                <input type="text" name="marque" th:value="${vehiculeForm.marque}" placeholder="Ex: Renault" required>
+            </label>
+            <label>
+                Modele
+                <input type="text" name="modele" th:value="${vehiculeForm.modele}" placeholder="Ex: Clio" required>
+            </label>
+            <label>
+                Client
+                <select name="clientId" required>
+                    <option value="">Choisir un client</option>
+                    <option th:each="client : ${clients}"
+                            th:value="${client.id}"
+                            th:selected="${vehiculeForm.client != null and client.id == vehiculeForm.client.id}"
+                            th:text="${client.nom}">
+                    </option>
+                </select>
+            </label>
+            <button type="submit" th:disabled="${#lists.isEmpty(clients)}"
+                    th:text="${editMode} ? 'Modifier' : 'Ajouter'">Ajouter</button>
+            <a th:if="${editMode}" th:href="@{/vehicules}" class="cancel">Annuler</a>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>Liste des vehicules</h2>
+        <p class="empty" th:if="${#lists.isEmpty(vehicules)}">Aucun vehicule pour le moment.</p>
+        <table th:if="${!#lists.isEmpty(vehicules)}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Marque</th>
+                <th>Modele</th>
+                <th>Client</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="vehicule : ${vehicules}">
+                <td th:text="${vehicule.id}"></td>
+                <td th:text="${vehicule.marque}"></td>
+                <td th:text="${vehicule.modele}"></td>
+                <td th:text="${vehicule.client != null ? vehicule.client.nom : '-'}"></td>
+                <td>
+                    <div class="actions">
+                        <a class="edit" th:href="@{/vehicules/edit/{id}(id=${vehicule.id})}">Modifier</a>
+                        <a class="danger" th:href="@{/vehicules/delete/{id}(id=${vehicule.id})}"
+                           onclick="return confirm('Supprimer ce vehicule ?')">Supprimer</a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

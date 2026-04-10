@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clients</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <p class="eyebrow">Garage</p>
+        <h1>Gestion des clients</h1>
+    </div>
+    <nav>
+        <a th:href="@{/clients}" class="active">Clients</a>
+        <a th:href="@{/vehicules}">Vehicules</a>
+        <a th:href="@{/reparations}">Reparations</a>
+    </nav>
+</header>
+
+<main class="page">
+    <section class="panel">
+        <h2 th:text="${editMode} ? 'Modifier le client' : 'Ajouter un client'">Ajouter un client</h2>
+        <form th:action="${editMode} ? @{/clients/update/{id}(id=${client.id})} : @{/clients}"
+              th:object="${client}" method="post" class="form-grid">
+            <label>
+                Nom
+                <input type="text" th:field="*{nom}" placeholder="Ex: Ahmed" required>
+            </label>
+            <label>
+                Contact
+                <input type="text" th:field="*{contact}" placeholder="Ex: 0600000000" required>
+            </label>
+            <button type="submit" th:text="${editMode} ? 'Modifier' : 'Ajouter'">Ajouter</button>
+            <a th:if="${editMode}" th:href="@{/clients}" class="cancel">Annuler</a>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>Liste des clients</h2>
+        <p class="empty" th:if="${#lists.isEmpty(clients)}">Aucun client pour le moment.</p>
+        <table th:if="${!#lists.isEmpty(clients)}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Contact</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="client : ${clients}">
+                <td th:text="${client.id}"></td>
+                <td th:text="${client.nom}"></td>
+                <td th:text="${client.contact}"></td>
+                <td>
+                    <div class="actions">
+                        <a class="edit" th:href="@{/clients/edit/{id}(id=${client.id})}">Modifier</a>
+                        <a class="danger" th:href="@{/clients/delete/{id}(id=${client.id})}"
+                           onclick="return confirm('Supprimer ce client ?')">Supprimer</a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>
